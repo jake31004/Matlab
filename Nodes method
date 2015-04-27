@@ -1,0 +1,54 @@
+clc, clear %limpiamos pantalla y variables
+
+disp('Método de NODOS!!!');
+
+nodos = input('Ingresa el número de nodos: ');
+
+ramas = input('Ingresa el número de ramas: ');
+
+A = zeros(nodos - 1, ramas); Y = zeros(ramas, ramas); %creamos las matrices de incidencia y de admitancias
+Jsk = zeros(ramas,1); Vsk = zeros(ramas,1); %corrientes independientes de ramas y voltajes independientes de ramas
+
+fprintf('Llenado de matriz de Incidencia A:\n');
+for m = 1 : (nodos - 1) %llenamos la matriz de incidencia
+    for n = 1 : ramas
+        if n == 1 %para mejor presentación del programa
+            fprintf('Nodo %d:\n ', m);
+        end
+        
+        fprintf('Ingresa A[%d][%d]: ', m,n);
+        A(m,n) = input('');
+    end
+end
+
+fprintf('Llenado de matriz de admitancias Y:\n');
+for m = 1 : ramas %solo se llena la diagonal, los demás valores son ceros
+    fprintf('Ingresa el valor Y[%d][%d]: ', m,m);
+    Y(m,m) = input('');
+end
+
+fprintf('Llenando vector de corrientes independietes de ramas:\n');
+for m = 1 : ramas 
+    fprintf('Ingresa Jsk[%d]:\n', m); %ingresamos el valor de forma polar (como se acostumbra en fuente)
+    modulo = input('Modulo: ');
+    angulo = input('Ángulo: ');
+    angulo = angulo * (pi/180); %convertimos el angulo en radianes
+    Jsk(m,1) = (modulo*cos(angulo)) + (modulo*sin(angulo))*sqrt(-1); %se usa raiz de -1 porque i ya se definió en el programa
+end
+
+fprintf('Llenando vector de voltajes independietes de ramas:\n');
+for m = 1 : ramas 
+    fprintf('Ingresa Vsk[%d]:\n', m);
+    modulo = input('Modulo: ');
+    angulo = input('Ángulo: ');
+    angulo = angulo * (pi/180); %convertimos el angulo en radianes
+    Vsk(m,1) = (modulo*cos(angulo)) + (modulo*sin(angulo))*sqrt(-1);
+end
+
+Yn = A*Y*A';
+Isn = A*Y*Vsk-(A*Jsk);
+eN = Yn\Isn; %inversa de Yn por Isn (forma más precisa)
+
+Vk = A' * eN;
+Jk = Y*Vk + Jsk - (Y*Vsk);
+
