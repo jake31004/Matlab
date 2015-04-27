@@ -1,0 +1,55 @@
+clc, clear %limpiamos pantalla y variables
+
+disp('Método de MALLAS!!!');
+
+mallas = input('Ingresa el número de mallas: ');
+
+ramas = input('Ingresa el número de ramas: ');
+
+M = zeros(mallas, ramas); Z = zeros(ramas, ramas); %creamos las matrices de incidencia y de admitancias
+Jsk = zeros(ramas,1); Vsk = zeros(ramas,1); %corrientes independientes de ramas y voltajes independientes de
+
+fprintf('Llenado de matriz de mallas M:\n');
+for m = 1 : (mallas) %llenamos la matriz de mallas
+    for n = 1 : ramas
+        if n == 1 %para mejor presentación del programa
+            fprintf('Malla %d:\n ', m);
+        end
+        
+        fprintf('Ingresa M[%d][%d]: ', m,n);
+        M(m,n) = input('');
+    end
+end
+
+fprintf('Llenado de matriz de impedancias Z:\n');
+for m = 1 : ramas %solo se llena la diagonal, los demás valores son ceros
+    fprintf('Ingresa el valor Z[%d][%d]: ', m,m);
+    Z(m,m) = input('');
+end
+
+fprintf('Llenando vector de corrientes independietes de ramas:\n');
+for m = 1 : ramas 
+    fprintf('Ingresa Jsk[%d]:\n', m); %ingresamos el valor de forma polar (como se acostumbra en fuente)
+    modulo = input('Modulo: ');
+    angulo = input('Ángulo: ');
+    angulo = angulo * (pi/180); %convertimos el angulo en radianes
+    Jsk(m,1) = (modulo*cos(angulo)) + (modulo*sin(angulo))*sqrt(-1); %se usa raiz de -1 porque i ya se definió en el programa
+end
+
+fprintf('Llenando vector de voltajes independietes de ramas:\n');
+for m = 1 : ramas 
+    fprintf('Ingresa Vsk[%d]:\n', m);
+    modulo = input('Modulo: ');
+    angulo = input('Ángulo: ');
+    angulo = angulo * (pi/180); %convertimos el angulo en radianes
+    Vsk(m,1) = (modulo*cos(angulo)) + (modulo*sin(angulo))*sqrt(-1);
+end
+
+Zm = M * Z * M';
+Esm = M*Z*Jsk - M*Vsk;
+
+Im = Zm\Esm;
+
+Jk = M' * Im;
+Vk = Vsk + Z*Jk - Z*Jsk;
+
