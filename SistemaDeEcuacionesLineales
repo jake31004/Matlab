@@ -1,0 +1,36 @@
+clear, clc %Limpiamos pantalla y variables
+
+disp('Sistema de ecuaciones lineales'); 
+
+incognitas = input('Ingresa el numero de incognitas: ');
+
+A = zeros(incognitas,incognitas); B = zeros(incognitas,1); %Creamos matriz de coeficientes y vector de soluciones
+
+fprintf('Llenado de matriz de coeficientes\n');
+
+for m = 1 : incognitas
+    for n = 1 : incognitas
+        fprintf('Ingresa A[%d][%d]: ', m, n);
+        A(m,n) = input('');
+    end
+end%Llenado de matriz de coeficientes A
+
+fprintf('Matriz de coeficientes: \n');
+A
+
+fprintf('Llenando vector de soluciones: \n');
+
+for m = 1 : incognitas
+    fprintf('Ingresa el valor B[%d]: ', m);
+    B(m) = input('');
+end
+
+fprintf('Vector de soluciones:\n');
+B
+
+C = inv(A);
+
+X = C\B; %El inverso por el vector de soluciones
+
+fprintf('Soluciones: ');
+X %Imprimimos vector de soluciones
