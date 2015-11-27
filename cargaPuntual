@@ -1,0 +1,123 @@
+clc, clear %limpiando pantalla y variables
+salir = 0;
+
+while salir == 0
+    %Menú
+    display('Calculo de carga puntual');
+    display('1.-Calculo de un valor en especifico');
+    display('2.-Graficar en r=0');
+    display('3.-Graficar en r distinta de cero');
+    display('4.-Graficar a profundidad constante');
+    display('5.-Salir');
+    op = input('Ingrsa una opcion: '); 
+
+    switch op
+        case 1 %Calcular un solo valor de Ds
+            display('Calculo de valores de forma individual');
+            %Ingreso de datos
+            r = input('Ingresa r en metros: ');
+            z = input('Ingresa z en metros: ');
+            P = input('Ingresa P: ');
+
+            %Calculo de Po
+            Po = (3/(2*pi))*(1/(1+(r/z)^2))^(5/2);
+            %Calculo de Ds
+            Ds = (P/z^2)*Po;
+            %Mostrando valores calculados
+            Po, Ds
+
+        case 2
+            display('Graficas');
+            display('r = 0');
+    
+            %Ingreso de datos
+            %a, b rango donde se graficará
+            a = input('Ingresa el valor inicial de Z: ');
+            b = input('Ingresa el valor final de Z: ');
+            P = input('Ingresa el valor de P: ');
+        
+            r = 0;
+            %Creando todos los valores de Z, desde el inicio del rango a
+            %hasta el fin del rango b
+            z = [a:0.1:b]; 
+            %Numero total de puntos en z
+            tam = length(z);
+            %Creando el espacio de memoria para guardar todos los datos
+            %calculados de Po y de Ds
+            Pro = zeros(1,tam);
+            Dso = zeros(1,tam);
+
+            %Calculando de uno en uno los valores de Po y de Ds
+            for i = 1 : tam
+                Pro(1,i) = (3/(2*pi))*(1/(1+(r/z(1,i))^2))^(5/2);
+                Dso(1,i) = (P/z(1,i)^2)*Pro(1,i);
+            end
+
+            %Creación de la gráfica
+            figure(1), plot(z, Dso);
+            
+            %Formato de la gráfica
+            title('R = 0');
+            xlabel('Z');
+            ylabel('Delta s');
+            grid on;
+
+            
+        case 3
+            display('Graficas');
+            display('r distinta de cero');
+
+            a = input('Ingresa el valor inicial de Z: ');
+            b = input('Ingresa el valor final de Z: ');
+            P = input('Ingresa el valor de P: ');
+            r = input('Ingresa el valor de r: ');
+
+            z = [a:0.1:b];
+            tam = length(z);
+            Pro = zeros(1,tam);
+            Dso = zeros(1,tam);
+
+            for i = 1 : tam
+                Pro(1,i) = (3/(2*pi))*(1/(1+(r/z(1,i))^2))^(5/2);
+                Dso(1,i) = (P/z(1,i)^2)*Pro(1,i);
+            end
+
+            figure(2), plot(z, Dso);
+            
+            title('R distinta de 0');
+            xlabel('Z');
+            ylabel('Delta s');
+            grid on;
+
+        case 4
+             display('Graficas');
+             display('Z constante');
+
+             a = input('Ingresa el valor inicial de r: ');
+             b = input('Ingresa el valor final de r: ');
+             P = input('Ingresa el valor de P: ');
+             z = input('Ingresa el valor de z: ');
+
+             r = [a:0.1:b];
+             tam = length(r);
+             Pro = zeros(1,tam);
+             Dso = zeros(1,tam);
+
+             for i = 1 : tam
+                 Pro(1,i) = (3/(2*pi))*(1/(1+(r(1,i)/z)^2))^(5/2);
+                 Dso(1,i) = (P/z^2)*Pro(1,i);
+             end
+             
+             figure(3), plot(r, Dso);
+             
+             title('Profundidad constante');
+             xlabel('r');
+             ylabel('Delta s');
+             grid on;
+
+        case 5
+            salir = 1;
+        otherwise
+            display('Opcion incorrecta :( ');
+    end
+end
